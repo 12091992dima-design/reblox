@@ -1,10 +1,12 @@
 {
-  "name": "Реблокс",
+  "name": "Реблокс - Симулятор",
   "short_name": "Реблокс",
+  "description": "Крутая игра кликер и симулятор езды",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "icons": []
 }
+
 
