@@ -3,217 +3,503 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Реблокс</title>
-    <link rel="manifest" href="manifest.json">
+    <title>Роблокс Кликер</title>
     <style>
         body {
-            background-color: #ffffff;
-            color: #111111;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            background: linear-gradient(135deg, #1a1c29, #2c3e50);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
+
         .top-bar {
             width: 100%;
-            max-width: 400px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 12px 0;
             display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            font-weight: bold;
+            justify-content: center;
+            gap: 20px;
             font-size: 16px;
+            font-weight: bold;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-        .robux-counter {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: #f2f4f5;
-            padding: 8px 14px;
+
+        .currency-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
             border-radius: 20px;
-            color: #111111;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .robux-icon {
-            width: 18px;
-            height: 18px;
-            background: #000000;
-            transform: rotate(45deg);
-            display: inline-block;
-            border-radius: 2px;
+
+        .container {
+            width: 90%;
+            max-width: 450px;
+            margin: 20px auto;
+            text-align: center;
         }
-        h1 {
-            color: #000000;
-            font-size: 36px;
-            margin-bottom: 5px;
-            letter-spacing: -1px;
-        }
-        .subtitle {
-            color: #666666;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
+
         .card {
-            background-color: #f8f9fa;
-            border: 1px solid #e5e5e5;
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
             padding: 20px;
-            width: 100%;
-            max-width: 320px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             display: none;
         }
-        .card.active {
-            display: block;
+
+        .active-card {
+            display: block !important;
         }
+
+        h2, h3 {
+            margin-top: 0;
+            color: #ffcc00;
+        }
+
         .menu-grid {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            width: 100%;
-            max-width: 320px;
         }
+
         button {
-            background: #000000;
-            color: white;
-            border: none;
-            padding: 16px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 12px;
             cursor: pointer;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: bold;
+            color: #fff;
+            transition: transform 0.1s, opacity 0.2s;
             width: 100%;
-            transition: opacity 0.1s;
         }
+
         button:active {
-            opacity: 0.8;
+            transform: scale(0.97);
         }
-        .btn-gray {
-            background: #e5e5e5;
-            color: #111111;
-            margin-top: 10px;
+
+        .btn-main { background: linear-gradient(45deg, #ff416c, #ff4b2b); }
+        .btn-secondary { background: linear-gradient(45deg, #2193b0, #6dd5ed); }
+        .btn-menu { background: linear-gradient(45deg, #3f2b96, #a8c0ff); }
+        .btn-clicker { 
+            background: linear-gradient(45deg, #f7971e, #ffd200); 
+            font-size: 20px; 
+            padding: 25px; 
+            border-radius: 50px; 
+            box-shadow: 0 5px 15px rgba(255, 210, 0, 0.4);
+            color: #1a1c29;
+            margin: 15px 0;
         }
+
         .info-text {
-            font-size: 13px;
-            color: #666666;
+            font-size: 14px;
+            color: #ddd;
             margin-bottom: 15px;
+        }
+
+        input, textarea {
+            width: 85%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 10px;
+            outline: none;
+        }
+
+        .pet-item, .title-item {
+            background: rgba(0,0,0,0.2);
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #chat-messages {
+            height: 150px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: left;
+            font-size: 13px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
     </style>
 </head>
 <body>
 
+    <!-- Шапка с балансом -->
     <div class="top-bar">
-        <div class="robux-counter">
-            <span id="robux">2</span>
-            <span class="robux-icon"></span>
+        <div class="currency-badge">💎 <span id="ui-robux">50</span> Ребаксов</div>
+        <div class="currency-badge">🪙 <span id="ui-tibux">0</span> Тибуксов</div>
+    </div>
+
+    <div class="container">
+
+        <!-- 1. Главное меню -->
+        <div id="screen-menu" class="card active-card">
+            <h2>Главное меню</h2>
+            <div class="menu-grid">
+                <button class="btn-main" onclick="openScreen('screen-clicker')">Кликер Тибуксов 🪙</button>
+                <button class="btn-secondary" onclick="openScreen('screen-drive')">Симулятор Езды 🏎️</button>
+                <button class="btn-menu" onclick="openScreen('screen-pets')">Магазин Питомцев 🐾</button>
+                <button class="btn-secondary" style="background: linear-gradient(45deg, #00b09b, #96c93d);" onclick="openScreen('screen-skins')">Магазин Обликов 👕</button>
+                <button class="btn-secondary" style="background: linear-gradient(45deg, #d35400, #e67e22);" onclick="openScreen('screen-daily')">Ежедневные Награды 🎁</button>
+                <button class="btn-menu" style="background: linear-gradient(45deg, #2980b9, #3498db);" onclick="openScreen('screen-titles')">Титулы 👑</button>
+                <button class="btn-main" style="background: linear-gradient(45deg, #16a085, #1abc9c);" onclick="openScreen('screen-promos')">Промокоды 🎟️</button>
+                <button class="btn-secondary" style="background: linear-gradient(45deg, #27ae60, #2ecc71);" onclick="openScreen('screen-chat')">Онлайн Чат 💬</button>
+                <button class="btn-secondary" style="background: linear-gradient(45deg, #1e3c72, #2a5298);" onclick="openScreen('screen-support')">Поддержка 🎧</button>
+            </div>
         </div>
-    </div>
 
-    <h1>REBLOX</h1>
-    <div class="subtitle">Главная страница</div>
-
-    <div id="screen-menu" class="card active" style="background: transparent; border: none; box-shadow: none; padding: 0;">
-        <div class="menu-grid">
-            <button onclick="openScreen('screen-clicker')">Кликер Тибуксов 🪙</button>
-            <button style="background: #0070f3;" onclick="openScreen('screen-drive')">Симулятор Езды 🏎️</button>
+        <!-- 2. Кликер -->
+        <div id="screen-clicker" class="card">
+            <h3>Кликер Тибуксов</h3>
+            <div class="info-text">Ранг: <span id="ui-title-display">Создатель 🛠️</span> | Ур. <span id="ui-level">1</span> (<span id="ui-xp">0</span> XP)</div>
+            <button class="btn-clicker" onclick="clickTibux()">КЛИК! 🪙</button>
+            <button class="btn-menu" onclick="openScreen('screen-menu')">🏠 Назад в меню</button>
         </div>
-    </div>
 
-    <div id="screen-clicker" class="card">
-        <h3 style="margin-top: 0;">Кликер Тибуксов</h3>
-        <div class="info-text">Копи 1000 тибуксов ради 1 ребакса!</div>
-        <div style="font-size: 22px; font-weight: bold; margin: 15px 0; color: #d97706;" id="tibux-display">Тибуксы: 0</div>
-        <button onclick="clickTibux()">Кликнуть тибукс!</button>
-        <button class="btn-gray" onclick="exchangeTibux()">Вывести в 1 Ребакс (Нужно 1000)</button>
-        <button class="btn-gray" onclick="openScreen('screen-menu')">Назад в меню</button>
-    </div>
+        <!-- 3. Симулятор езды -->
+        <div id="screen-drive" class="card">
+            <h3>Симулятор Езды</h3>
+            <div class="info-text">Жми газ, катайся по дорогам и зарабатывай валюту!</div>
+            <button class="btn-main" onclick="driveCar()">🏎️ Дать газу (+5 Тибуксов)</button>
+            <button class="btn-menu" style="margin-top: 10px;" onclick="openScreen('screen-menu')">🏠 Назад в меню</button>
+        </div>
 
-    <div id="screen-drive" class="card">
-        <h3 style="margin-top: 0;">Симулятор Езды</h3>
-        <div class="info-text">Прокачивай тачку и гоняй за ребаксы!</div>
-        <div style="font-size: 22px; font-weight: bold; margin: 15px 0; color: #0070f3;" id="speed-display">Скорость: 10 км/ч</div>
-        <button style="background: #0070f3;" onclick="driveCar()">Жми на газ! (+Ребаксы)</button>
-        <button class="btn-gray" onclick="upgradeCar()" id="upgrade-btn">Улучшить мотор (Цена: 5 ребаксов)</button>
-        <button class="btn-gray" onclick="openScreen('screen-menu')">Назад в меню</button>
+        <!-- 4. Питомцы -->
+        <div id="screen-pets" class="card">
+            <h3>Магазин Питомцев</h3>
+            <div class="info-text">Покупай помощников для авто-клика!</div>
+            <div id="pets-list"></div>
+            <button class="btn-menu" style="margin-top: 10px;" onclick="openScreen('screen-menu')">🏠 Назад в меню</button>
+        </div>
+
+        <!-- Скины -->
+        <div id="screen-skins" class="card">
+            <h3 style="color: #00b09b;">👕 Магазин Обликов</h3>
+            <div class="info-text">Выбирай стиль персонажа!</div>
+            <div style="max-height: 160px; overflow-y: auto; text-align: left; margin-bottom: 12px; padding-right: 5px;" id="skins-list"></div>
+            <button class="btn-menu" onclick="openScreen('screen-menu')">🏠 Назад в меню</button>
+        </div>
+
+        <!-- 5. Ежедневные награды -->
+        <div id="screen-daily" class="card">
+            <h3>Ежедневные Награды</h3>
+            <div class="info-text">Заходи каждый день и забирай крутые бонусы!</div>
+            <button class="btn-main" onclick="claimDailyReward()">🎁 Забрать бонус (24 часа)</button>
+            <button class="btn-menu" style="margin-top: 10px;" onclick="openScreen('screen-menu')">🏠 Назад в меню</button>
+        </div>
+
+        <!-- 6. Титулы -->
+        <div id="screen-titles" class="card">
+            <h3>Магазин Титулов</h3>
+            <div class="info-text">Покупай титулы за Ребаксы и выделяйся в чате!</div>
+            <div id="titles-list" style="max-height: 160px; overflow-y: auto; text-align: left; margin-bottom: 12px; padding-right: 5px;"></div>
+            <button class="btn-menu" onclick="openScreen('screen-menu')">🏠 Назад в меню</button>
+        </div>
+
+        <!-- 7. Промокоды -->
+        <div id="screen-promos" class="card">
+            <h3>Активация промокодов</h3>
+            <input type="text" id="promo-input" placeholder="Введи код...">
+            <button class="btn-main" onclick="activatePromo()">Активировать</button>
+            <button class="btn-menu" style="margin-top: 10px;" onclick="openScreen('screen-menu')">🏠 Назад в меню</button>
+        </div>
+
+        <!-- 8. Чат -->
+        <div id="screen-chat" class="card">
+            <h3>Онлайн Чат</h3>
+            <div id="chat-messages"></div>
+            <input type="text" id="chat-input" placeholder="Напиши сообщение...">
+            <button class="btn-main" onclick="sendChatMessage()">Отправить</button>
+            <button class="btn-menu" style="margin-top: 10px;" onclick="openScreen('screen-menu')">🏠 Назад в меню</button>
+        </div>
+
+        <!-- Поддержка -->
+        <div id="screen-support" class="card">
+            <h3 style="color: #2a5298;">🎧 Поддержка</h3>
+            <div class="info-text">Нашли баг или есть идея? Напишите Создателю (Грустный)!</div>
+            <textarea id="support-input" placeholder="Опишите проблему или идею здесь..." style="width: 90%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 10px; font-family: inherit; resize: none;"></textarea>
+            <button class="btn-main" onclick="sendSupport()">📤 Отправить Создателю</button>
+            <button class="btn-menu" style="margin-top: 10px;" onclick="openScreen('screen-menu')">🏠 Назад в меню</button>
+        </div>
+
     </div>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(err => console.log("SW error: ", err));
-        }
-
-        let data = JSON.parse(localStorage.getItem('reblox_data')) || {
-            robux: 2,
+        let data = {
+            robux: 50,
             tibux: 0,
-            speed: 10,
-            upgradeCost: 5
+            level: 1,
+            xp: 0,
+            lastRewardTime: 0,
+            currentTitle: 'Создатель 🛠️',
+            ownedTitles: ['Новичок', 'Создатель 🛠️'],
+            currentSkin: 'Неоновый мятный 🟢',
+            ownedSkins: ['Неоновый мятный 🟢'],
+            pets: []
         };
 
+        function loadGame() {
+            let saved = localStorage.getItem('grostny_game_data');
+            if (saved) {
+                try { data = JSON.parse(saved); } catch(e){}
+            }
+            updateUI();
+        }
+
         function saveGame() {
-            localStorage.setItem('reblox_data', JSON.stringify(data));
+            localStorage.setItem('grostny_game_data', JSON.stringify(data));
+        }
+
+        function updateUI() {
+            document.getElementById('ui-robux').innerText = data.robux;
+            document.getElementById('ui-tibux').innerText = data.tibux;
+            document.getElementById('ui-level').innerText = data.level;
+            document.getElementById('ui-xp').innerText = data.xp;
+            let titleDisplay = document.getElementById('ui-title-display');
+            if (titleDisplay) titleDisplay.innerText = data.currentTitle;
+        }
+
+        const allTitles = [
+            { name: 'Создатель 🛠️', price: 0 },
+            { name: 'Новичок', price: 0 },
+            { name: 'Геймер 🎮', price: 5 },
+            { name: 'Профи 🔥', price: 15 },
+            { name: 'Легенда 👑', price: 50 },
+            { name: 'Магнат 💎', price: 100 }
+        ];
+
+        const allSkins = [
+            { name: 'Неоновый мятный 🟢', price: 0 },
+            { name: 'Огненный красный 🔴', price: 10 },
+            { name: 'Золотой легион 🟡', price: 25 },
+            { name: 'Королевский фиолетовый 🟣', price: 50 },
+            { name: 'Кибер-синий 🔵', price: 100 }
+        ];
+
+        const allPets = [
+            { id: 'cat', name: 'Кот-кликер 🐈', cost: 50, dps: 1 },
+            { id: 'dog', name: 'Песель 🐕', cost: 200, dps: 5 }
+        ];
+
+        const validPromos = {
+            'GROSTNY': { robux: 10, tibux: 500 },
+            'REBLOX2026': { robux: 5, tibux: 200 },
+            'SUPERWIN': { robux: 15, tibux: 1000 },
+            'ROBLOX2026': { robux: 20, tibux: 2500 }
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadGame();
+            renderTitles();
+            renderSkins();
+            renderPets();
+        });
+
+        function clickTibux() {
+            data.tibux += 1;
+            data.xp += 2;
+            if (data.xp >= data.level * 50) {
+                data.level += 1;
+                data.robux += 2;
+                alert(`🎉 Повышение уровня! Ты достиг Уровня ${data.level} (+2 Ребакса!)`);
+            }
+            updateUI();
+            saveGame();
+        }
+
+        function driveCar() {
+            data.tibux += 5;
+            data.xp += 3;
+            updateUI();
+            saveGame();
+            alert("🏎️ Отличная поездка! +5 Тибуксов.");
+        }
+
+        function claimDailyReward() {
+            let now = Date.now();
+            let oneDay = 24 * 60 * 60 * 1000;
+            if (now - data.lastRewardTime < oneDay) {
+                let timeLeft = Math.ceil((oneDay - (now - data.lastRewardTime)) / (1000 * 60 * 60));
+                alert(`⏳ Награда будет доступна через ${timeLeft} ч.`);
+                return;
+            }
+            data.lastRewardTime = now;
+            data.robux += 10;
+            data.tibux += 1000;
+            updateUI();
+            saveGame();
+            alert("🎁 Бонус получен! +10 Ребаксов и +1000 Тибуксов!");
+        }
+
+        function renderTitles() {
+            let container = document.getElementById("titles-list");
+            if (!container) return;
+            container.innerHTML = "";
+            allTitles.forEach(t => {
+                let isOwned = data.ownedTitles.includes(t.name);
+                let isSelected = data.currentTitle === t.name;
+                let btnHtml = isSelected ? 
+                    `<span style="color: #27ae60; font-weight: bold; font-size: 11px;">Выбрано</span>` :
+                    (isOwned ? `<button class="btn-secondary" style="padding: 4px 8px; font-size: 11px; width: auto;" onclick="selectTitle('${t.name}')">Надеть</button>` :
+                    `<button class="btn-main" style="padding: 4px 8px; font-size: 11px; width: auto;" onclick="buyTitle('${t.name}', ${t.price})">Купить (${t.price} 💎)</button>`);
+
+                container.innerHTML += `<div class="title-item"><span><b>${t.name}</b></span>${btnHtml}</div>`;
+            });
+        }
+
+        function buyTitle(titleName, price) {
+            if (data.robux < price) { alert("Не хватает Ребаксов!"); return; }
+            data.robux -= price;
+            data.ownedTitles.push(titleName);
+            data.currentTitle = titleName;
+            updateUI();
+            renderTitles();
+            saveGame();
+            alert(`Титул "${titleName}" куплен и надет!`);
+        }
+
+        function selectTitle(titleName) {
+            data.currentTitle = titleName;
+            updateUI();
+            renderTitles();
+            saveGame();
+            alert(`Титул изменен на: ${titleName}`);
+        }
+
+        function renderSkins() {
+            let container = document.getElementById("skins-list");
+            if (!container) return;
+            container.innerHTML = "";
+            allSkins.forEach(skin => {
+                let isOwned = data.ownedSkins.includes(skin.name);
+                let isSelected = data.currentSkin === skin.name;
+                let btnHtml = isSelected ? 
+                    `<span style="color: #27ae60; font-weight: bold; font-size: 11px;">Надето</span>` :
+                    (isOwned ? `<button class="btn-secondary" style="padding: 4px 8px; font-size: 11px; width: auto;" onclick="selectSkin('${skin.name}')">Надеть</button>` :
+                    `<button class="btn-main" style="padding: 4px 8px; font-size: 11px; width: auto;" onclick="buySkin('${skin.name}', ${skin.price})">Купить (${skin.price} 💎)</button>`);
+
+                container.innerHTML += `<div class="pet-item"><span><b>${skin.name}</b></span>${btnHtml}</div>`;
+            });
+        }
+
+        function buySkin(skinName, price) {
+            if (data.robux < price) { alert("Не хватает Ребаксов!"); return; }
+            data.robux -= price;
+            data.ownedSkins.push(skinName);
+            data.currentSkin = skinName;
+            updateUI();
+            renderSkins();
+            saveGame();
+            alert("Облик успешно куплен и надет!");
+        }
+
+        function selectSkin(skinName) {
+            data.currentSkin = skinName;
+            updateUI();
+            renderSkins();
+            saveGame();
+            alert("Облик успешно изменен!");
+        }
+
+        function renderPets() {
+            let container = document.getElementById("pets-list");
+            if (!container) return;
+            container.innerHTML = "";
+            allPets.forEach(p => {
+                let hasPet = data.pets.includes(p.id);
+                let btnHtml = hasPet ? `<span style="color: #27ae60; font-weight: bold;">Куплено</span>` : `<button class="btn-main" style="padding: 6px 12px; width: auto;" onclick="buyPet('${p.id}', ${p.cost})">Купить (${p.cost} 🪙)</button>`;
+                container.innerHTML += `<div class="pet-item"><span><b>${p.name}</b> (+${p.dps}/сек)</span>${btnHtml}</div>`;
+            });
+        }
+
+        function buyPet(id, cost) {
+            if (data.tibux < cost) { alert("Не хватает Тибуксов!"); return; }
+            data.tibux -= cost;
+            data.pets.push(id);
+            updateUI();
+            renderPets();
+            saveGame();
+            alert("Питомец куплен!");
+        }
+
+        function activatePromo() {
+            let code = document.getElementById("promo-input").value.trim().toUpperCase();
+            if (validPromos[code]) {
+                let reward = validPromos[code];
+                data.robux += reward.robux;
+                data.tibux += reward.tibux;
+                updateUI();
+                saveGame();
+                alert(`🎉 Промокод активирован! Получено: +${reward.robux} 💎 и +${reward.tibux} 🪙`);
+                document.getElementById("promo-input").value = "";
+            } else {
+                alert("❌ Неверный или уже использованный код!");
+            }
+        }
+
+        function sendChatMessage() {
+            let input = document.getElementById("chat-input");
+            if (!input) return;
+            let text = input.value.trim();
+            if (!text) return;
+
+            let chatBox = document.getElementById("chat-messages");
+            chatBox.innerHTML += `<div><b>Грустный [${data.currentTitle}]:</b> ${text}</div>`;
+            input.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function sendSupport() {
+            let input = document.getElementById("support-input");
+            if (!input) return;
+            let text = input.value.trim();
+            if (!text) {
+                alert("Напиши хоть что-то, чтобы отправить сообщение!");
+                return;
+            }
+            alert("✅ Сообщение успешно отправлено Создателю (Грустный)! Спасибо за помощь.");
+            input.value = "";
+            openScreen('screen-menu');
         }
 
         function openScreen(screenId) {
             document.querySelectorAll('.card').forEach(card => {
-                card.classList.remove('active');
+                card.classList.remove('active-card');
             });
-            if(screenId === 'screen-menu') {
-                document.getElementById('screen-menu').classList.add('active');
+            
+            let target = document.getElementById(screenId);
+            if (target) {
+                target.classList.add('active-card');
             } else {
-                document.getElementById('screen-menu').classList.remove('active');
-                document.getElementById(screenId).classList.add('active');
+                document.getElementById('screen-menu').classList.add('active-card');
             }
-        }
-
-        function clickTibux() {
-            data.tibux += 1;
-            updateUI();
             saveGame();
         }
 
-        function exchangeTibux() {
-            if (data.tibux >= 1000) {
-                data.tibux -= 1000;
-                data.robux += 1;
-                alert("Ура! Комиссия прошла, тебе начислился 1 Ребакс!");
-                updateUI();
-                saveGame();
-            } else {
-                alert("Мало тибуксов! Нужно ровно 1000, а у тебя " + data.tibux);
-            }
-        }
-
-        function driveCar() {
-            let earned = Math.floor(data.speed / 10);
-            data.robux += earned;
-            updateUI();
-            saveGame();
-        }
-
-        function upgradeCar() {
-            if (data.robux >= data.upgradeCost) {
-                data.robux -= data.upgradeCost;
-                data.speed += 15;
-                data.upgradeCost = Math.round(data.upgradeCost * 1.5);
-                updateUI();
-                saveGame();
-            } else {
-                alert("Не хватает ребаксов на тюнинг тачки!");
-            }
-        }
-
-        function updateUI() {
-            document.getElementById("robux").innerText = data.robux;
-            document.getElementById("tibux-display").innerText = "Тибуксы: " + data.tibux;
-            document.getElementById("speed-display").innerText = "Скорость: " + data.speed + " км/ч";
-            document.getElementById("upgrade-btn").innerText = "Улучшить мотор (Цена: " + data.upgradeCost + " ребаксов)";
-        }
-
-        updateUI();
-    </script>
-</body>
-  </html>
-
+        setInterval(() => {
+            if (data.pets.length > 0) {
+       
